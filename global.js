@@ -41,8 +41,32 @@ const url = require('url');
 ///////////////////////////////////////
 // SERVER
 const newServer = http.createServer((req, res) => {
-    console.log(req.url)
-    res.end('Hello this is the server. Any changes?') //send response to the client
+    const path = req.url; 
+
+    if (path === '/'){
+        res.end('This is the HOME!');
+    } else if (path === '/overview'){
+        res.writeHead (200, {
+            'Content-type': 'text/html',
+            'X-Api-Key': '123438'
+        })
+        res.end('<h1>This is an OVERVIEW page!</h1>');
+    } else if (path === '/api'){
+        fs.readFile(`${__dirname}/dev-data/data.json`, 'utf-8', (err, data) => {
+            const devData = JSON.parse(data);
+            // console.log(data);
+            res.end(data);
+        });
+
+    }
+    else {
+        res.writeHead (404, {
+            'Content-type': 'text/html'
+        })
+        res.end('<h2>Page Not Found!</h2>')
+    }
+
+    // res.end('Hello this is the server. Any changes?') //send response to the client
 });
 
 newServer.listen(3000, '127.0.0.1', () => {
