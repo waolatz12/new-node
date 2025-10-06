@@ -1,16 +1,20 @@
-function functionModule (){
-    console.log('Hello, this is function one');
-}
+// function functionModule (){
+//     console.log('Hello, this is function one');
+// }
 
-function functionModule2 (){
-    console.log('Hello, this is function two');
-}
+// function functionModule2 (){
+//     console.log('Hello, this is function two');
+// }
 
-const list = ['ordered', 'unordered', 'orgamized', 'divided'];
+// const list = ['ordered', 'unordered', 'orgamized', 'divided'];
 
-module.exports = {
-    foo: 'bar',
-    list:list,
-    functionModule: functionModule,
-    functionModule2: functionModule2,
-}
+// module.exports = {
+//     foo: 'bar',
+//     list:list,
+//     functionModule: functionModule,
+//     functionModule2: functionModule2,
+// }
+
+const numbers = [1, 2, 3, 4, 5];
+const doubledNumbers = numbers.map(num => num * 2);
+console.log(doubledNumbers);

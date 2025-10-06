@@ -17,6 +17,8 @@
 const fs = require('fs');
 const http = require('http');
 const url = require('url');
+
+
 // const readCheck = fs.readFileSync('./folder/testing.txt', 'utf-8');
 
 // const timecheck = `This is the file I asked to be read ${readCheck}.\nCreated on ${Date.now()}`;
@@ -40,24 +42,34 @@ const url = require('url');
 
 ///////////////////////////////////////
 // SERVER
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataobj = JSON.parse(data);
 const newServer = http.createServer((req, res) => {
     const path = req.url; 
+        // OVERVIEW PAGE
+    if (path === '/'  || path === '/overview'){
+        res.writeHead(200, {'Content-type': 'text/html'});
+        res.end(tempOverview);
+        // res.end('This is the HOME!');
 
-    if (path === '/'){
-        res.end('This is the HOME!');
-    } else if (path === '/overview'){
-        res.writeHead (200, {
-            'Content-type': 'text/html',
-            'X-Api-Key': '123438'
-        })
-        res.end('<h1>This is an OVERVIEW page!</h1>');
+        // PRODUCT PAGE
+    } else if (path === '/product'){
+       res.end('This is the product!');
+       
+        // res.writeHead (200, {
+        //     'Content-type': 'text/html',
+        //     'X-Api-Key': '123438'
+        // })
+        // res.end('<h1>This is an OVERVIEW page!</h1>');
+        //API
     } else if (path === '/api'){
-        fs.readFile(`${__dirname}/dev-data/data.json`, 'utf-8', (err, data) => {
-            const devData = JSON.parse(data);
+        res.writeHead(200, {'Content-type': 'application/json'});
             // console.log(data);
-            res.end(data);
-        });
-
+        res.end(data);
+        //404
     }
     else {
         res.writeHead (404, {
