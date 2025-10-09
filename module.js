@@ -14,7 +14,10 @@
 //     functionModule: functionModule,
 //     functionModule2: functionModule2,
 // }
-
+const fs = require('fs');
+// const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataobj = JSON.parse(data);
 const numbers = [1, 2, 3, 4, 5];
 const doubledNumbers = numbers.map(num => num * 2);
-console.log(doubledNumbers);
+console.log(dataobj);

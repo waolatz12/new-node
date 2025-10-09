@@ -42,22 +42,46 @@ const url = require('url');
 
 ///////////////////////////////////////
 // SERVER
+const replaceTemplate = (temp, product) => {
+    let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName); //we added the g flag so this affect all places where the variable is being specified not just specific ones in the card
+    output = output.replace(/{%IMAGE%}/g, product.image);
+    output = output.replace(/{%PRICE%}/g, product.price);
+    output = output.replace(/{%FROM%}/g, product.from);
+    output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
+    output = output.replace(/{%QUANTITY%}/g, product.quantity);
+    output = output.replace(/{%DESCRIPTION%}/g, product.description);
+    output = output.replace(/{%ID%}/g, product.id);
+
+    if (!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic'); //not-organic is a class specified in the file's CSS properties
+    return output;
+}
 const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
 const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
 const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
-const dataobj = JSON.parse(data);
+const dataObj = JSON.parse(data);
 const newServer = http.createServer((req, res) => {
     const path = req.url; 
+    // console.log(path);
+    // console.log(url.parse(path, true));
+    const {query , pathname} = url.parse(req.url, true); //query and pathname are the specific column of the response in the console for the page objects
         // OVERVIEW PAGE
-    if (path === '/'  || path === '/overview'){
+    if (pathname === '/'  || pathname === '/overview'){
         res.writeHead(200, {'Content-type': 'text/html'});
-        res.end(tempOverview);
+        const cardsHtml = dataObj.map(element => replaceTemplate(tempCard, element)).join(''); //this replace each element with the tempCard and save it in the element .join('') joins all the array elements into one string without commas:
+        const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+        // console.log(cardsHtml);
+        res.end(output);
         // res.end('This is the HOME!');
 
         // PRODUCT PAGE
-    } else if (path === '/product'){
-       res.end('This is the product!');
+    } else if (pathname === '/product'){
+        res.writeHead(200, {'Content-type': 'text/html'});
+        const product = dataObj[query.id];
+        const output = replaceTemplate(tempProduct,product);
+
+        // console.log(query);
+       res.end(output);
        
         // res.writeHead (200, {
         //     'Content-type': 'text/html',
@@ -65,9 +89,9 @@ const newServer = http.createServer((req, res) => {
         // })
         // res.end('<h1>This is an OVERVIEW page!</h1>');
         //API
-    } else if (path === '/api'){
+    } else if (pathname === '/api'){
         res.writeHead(200, {'Content-type': 'application/json'});
-            // console.log(data);
+            console.log(data);
         res.end(data);
         //404
     }
