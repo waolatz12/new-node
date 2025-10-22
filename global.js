@@ -57,6 +57,7 @@ const replaceTemplate = require('./storage/replaceTemplate')
 //     return output;
 // }
 const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const tempBlogs = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
 const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
 const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
@@ -108,4 +109,6 @@ const newServer = http.createServer((req, res) => {
 
 newServer.listen(3000, '127.0.0.1', () => {
     console.log('Listening to requests on port 8000');
-})
+});
+
+
