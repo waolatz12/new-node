@@ -1,14 +1,15 @@
-const http = require('node:http');
+// console.log(arguments);
+// console.log(require('module').wrapper);
+//module.exports
+const Calc = require('./calculator');
 
-const hostname = '127.0.0.1';
-const port = 3000;
+const  calculations = new Calc();
+console.log(calculations.add(2, 3));
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello, World!\n');
-});
+//exports
+// const Calc2 = require('./calculator2');
+const {add, multiply} = require('./calculator2'); //another way for writing the code above
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+// console.log(Calc2.multiply(4,5));
+console.log(add(4,5));
+
