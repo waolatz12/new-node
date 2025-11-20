@@ -47,6 +47,7 @@ const writeFilePro = (file, data) => {
   });
 };
 
+/*
 readFilePro(`${__dirname}/dog.txt`)
   .then((data) => {
     console.log(`Breed: ${data}`);
@@ -62,6 +63,8 @@ readFilePro(`${__dirname}/dog.txt`)
   .catch((err) => {
     console.log(err);
   });
+
+  */
 
 // fs.readFile(`${__dirname}/dog.txt`, 'utf-8', (err, data) => {
 //   console.log(`Breed: ${data}`);
@@ -79,4 +82,72 @@ readFilePro(`${__dirname}/dog.txt`)
 //     });
 // });
 
+const getDogPic = async () => {
+  try {
+    const data = await readFilePro(`${__dirname}/dog.txt`);
+    //await stops the code from running until the promises is resolved.
+    console.log(`Breed: ${data}`);
+    const res = await superagent.get(
+      `https://dog.ceo/api/breed/${data}/images/random`
+    );
+    console.log(res.body.message);
+    await writeFilePro(`${__dirname}/dog-image.txt`, res.body.message);
+    console.log('Random dog image saved to file!');
+  } catch (err) {
+    console.log(err);
+  }
+  return '2: READY @';
+};
+
+const getDogPick = async () => {
+  try {
+    const data = await readFilePro(`${__dirname}/dog.txt`);
+    console.log(`Breed: ${data}`);
+
+    // const res = await superagent.get(
+    //   `https://dog.ceo/api/breed/${data}/images/random`
+    // );
+
+    const res1Pro = superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
+    const res2Pro = superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
+    const res3Pro = superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
+
+    const all = await Promise.all([res1Pro, res2Pro, res3Pro]);
+    const images = all.map(el => el.body.message);
+    // console.log(res.body.message);
+    console.log(images);
+    // await writeFilePro(`${__dirname}/dog-image.txt`, res.body.message);
+    await writeFilePro(`${__dirname}/dog-image.txt`, images.join('\n'));
+    console.log('Random image saved to file');
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+  return '2: WAITING FOR PICS...';
+};
+
+(async () => {
+  try {
+    console.log('1: I will get dog pics');
+    const x = await getDogPick();
+    console.log(x);
+    console.log('3: Done getting dog pics!');
+  } catch (err) {
+    console.log('ERROR!!!');
+  }
+})();
+/*console.log('1: Will get dog pics');
+getDogPick().then(x => {
+  console.log(x);
+  console.log('3: Done getting dog pics');
+})
+.catch(err => {
+  console.log(err);
+});
+*/
+// getDogPic().then(x => {
+//   console.log(x);
+//   console.log('3: Done getting dog pics');
+// });
+// getDogPic();
 console.log(__dirname);
